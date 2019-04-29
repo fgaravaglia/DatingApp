@@ -9,12 +9,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError(error => {
                 if (error instanceof HttpErrorResponse) {
-
-                    // manage status unauthorized
                     if (error.status === 401) {
                         return throwError(error.statusText);
                     }
-
                     const applicationError = error.headers.get('Application-Error');
                     if (applicationError) {
                         console.error(applicationError);
@@ -23,7 +20,6 @@ export class ErrorInterceptor implements HttpInterceptor {
                     const serverError = error.error;
                     let modalStateErrors = '';
                     if (serverError && typeof serverError === 'object') {
-                        // manage model state errors
                         for (const key in serverError) {
                             if (serverError[key]) {
                                 modalStateErrors += serverError[key] + '\n';

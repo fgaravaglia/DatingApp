@@ -41,7 +41,6 @@ export class MemberEditComponent implements OnInit {
     });
   }
 
-  // methods fired from html to get event from photo-editor component any times we change main photo
   updateMainPhoto(photoUrl) {
     this.user.photoUrl = photoUrl;
   }

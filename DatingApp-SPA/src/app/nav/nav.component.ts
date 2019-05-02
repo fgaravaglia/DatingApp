@@ -35,7 +35,6 @@ export class NavComponent implements OnInit {
   }
 
   logout() {
-    // clean up the local storage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.authService.decodedToken = null;

@@ -41,6 +41,8 @@ namespace DatingApp.API
                             opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                         });
             services.AddCors();
+            // read appsettings file to get section for cloudinary
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
             services.AddTransient<Seed>();
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -85,6 +87,9 @@ namespace DatingApp.API
             // app.UseHttpsRedirection();
             // feed the users into DB
             //seeder.SeedUsers();
+
+            // use some security rules to allow calls
+            // .AllowCredentials() sends cookies, but we have not.
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseMvc();

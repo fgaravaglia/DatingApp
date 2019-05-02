@@ -37,11 +37,11 @@ namespace DatingApp.API
         {
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                        .AddJsonOptions(opt => {
-                            opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                        });
+                .AddJsonOptions(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = 
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
             services.AddCors();
-            // read appsettings file to get section for cloudinary
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
             services.AddTransient<Seed>();
@@ -58,6 +58,7 @@ namespace DatingApp.API
                         ValidateAudience = false
                     };
                 });
+            services.AddScoped<LogUserActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,12 +86,9 @@ namespace DatingApp.API
             }
 
             // app.UseHttpsRedirection();
-            // feed the users into DB
-            //seeder.SeedUsers();
-
-            // use some security rules to allow calls
-            // .AllowCredentials() sends cookies, but we have not.
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            // seeder.SeedUsers();
+            app.UseCors(x => x.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseAuthentication();
             app.UseMvc();
         }

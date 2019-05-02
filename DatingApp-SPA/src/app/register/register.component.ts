@@ -28,7 +28,6 @@ export class RegisterComponent implements OnInit {
   }
 
   createRegisterForm() {
-    // using service to create programmatically the vlaidators
     this.registerForm = this.fb.group({
       gender: ['male'],
       username: ['', Validators.required],
@@ -47,15 +46,12 @@ export class RegisterComponent implements OnInit {
 
   register() {
     if (this.registerForm.valid) {
-      // clean the user  and assign it from form one
       this.user = Object.assign({}, this.registerForm.value);
-      // invoke API
       this.authService.register(this.user).subscribe(() => {
         this.alertify.success('Registration successful');
       }, error => {
         this.alertify.error(error);
       }, () => {
-        // after succesfully registration, perform the login
         this.authService.login(this.user).subscribe(() => {
           this.router.navigate(['/members']);
         });

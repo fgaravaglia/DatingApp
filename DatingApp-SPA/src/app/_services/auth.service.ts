@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
@@ -20,7 +20,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   changeMemberPhoto(photoUrl: string) {
-    // propagate the change
     this.photoUrl.next(photoUrl);
   }
 
@@ -29,20 +28,18 @@ export class AuthService {
       map((response: any) => {
         const user = response;
         if (user) {
-          // save locally token (to be passed to each API call) and user info
           localStorage.setItem('token', user.token);
           localStorage.setItem('user', JSON.stringify(user.user));
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.currentUser = user.user;
-          // propagate the eevent to update the app
           this.changeMemberPhoto(this.currentUser.photoUrl);
         }
       })
     );
   }
 
-  register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+  register(user: User) {
+    return this.http.post(this.baseUrl + 'register', user);
   }
 
   loggedIn() {

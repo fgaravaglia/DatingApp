@@ -54,8 +54,10 @@ namespace DatingApp.API.Data
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
             var users = _context.Users.Include(p => p.Photos)
-                .OrderByDescending(u => u.LastActive).AsQueryable();
+                                        .OrderByDescending(u => u.LastActive)
+                                        .AsQueryable();
 
+            // exclude logged user
             users = users.Where(u => u.Id != userParams.UserId);
 
             users = users.Where(u => u.Gender == userParams.Gender);

@@ -25,5 +25,7 @@ Material Icon Theme [kief]
 Path Intellisence [Christian Kohler]
 Prettier [Kohler]
 TSLint
+Deploy [Kloubert]
 
-
+#publish it
+dotnet publish -o C:\Temp\DAPublish\

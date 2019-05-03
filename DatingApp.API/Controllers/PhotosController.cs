@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    // [Authorize] no longer needed. on startup.cs we enforced that policy for all controllers
     [Route("api/users/{userId}/photos")]
     [ApiController]
     public class PhotosController : ControllerBase

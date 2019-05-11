@@ -106,6 +106,20 @@ namespace DatingApp.API
                     };
                 });
 
+            services.AddAuthorization(options => {
+                options.AddPolicy("RequireAdminRole", policy=>{
+                    policy.RequireRole("Admin");
+                });
+
+                options.AddPolicy("ModeratorPhotoRole", policy=>{
+                    policy.RequireRole("Admin", "Moderator");
+                });
+
+                options.AddPolicy("VIPOnly", policy=>{
+                    policy.RequireRole("VIP");
+                });
+            });
+
             #endregion
 
             // I require all controller to be authenticated, So we can avoid [Authorize] attribute upon them
@@ -115,6 +129,7 @@ namespace DatingApp.API
                                 .Build();
                 options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter(policy));
             })
+            //services.AddMvc()
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions(opt => {
                     opt.SerializerSettings.ReferenceLoopHandling = 
@@ -159,7 +174,7 @@ namespace DatingApp.API
             app.UseCors(x => x.WithOrigins("http://localhost:4200")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
-                                 .AllowCredentials());
+                                .AllowCredentials());
             app.UseAuthentication();
             // look for default files, such index.html, default.html, etc
             app.UseDefaultFiles();
@@ -167,12 +182,13 @@ namespace DatingApp.API
             app.UseStaticFiles();
             // tell to MVC that angular is taking care of some routes
             app.UseMvc(routes => {
+                // valid only for production
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Fallback", action = "Index"}
                 );
             });
-
+            //app.UseMvc();
         }
     }
 }
